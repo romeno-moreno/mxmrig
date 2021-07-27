@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WebBrowserVC" customModule="xmrig_notls" customModuleProvider="target">
+            <connections>
+                <outlet property="activityView" destination="sm8-QW-xBD" id="KMd-KZ-YX2"/>
+                <outlet property="view" destination="iN0-l3-epB" id="2we-Nd-SEr"/>
+                <outlet property="webView" destination="Uox-AA-AcS" id="hiQ-zf-cQI"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="sm8-QW-xBD">
+                    <rect key="frame" x="188.5" y="434.5" width="37" height="37"/>
+                </activityIndicatorView>
+                <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uox-AA-AcS">
+                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <wkWebViewConfiguration key="configuration">
+                        <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                        <wkPreferences key="preferences"/>
+                    </wkWebViewConfiguration>
+                </wkWebView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="Uox-AA-AcS" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="A23-Yp-Vee"/>
+                <constraint firstItem="sm8-QW-xBD" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="EEe-5R-Pk0"/>
+                <constraint firstItem="sm8-QW-xBD" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="Jtw-4c-qlZ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Uox-AA-AcS" secondAttribute="bottom" id="jfz-09-CeU"/>
+                <constraint firstItem="sm8-QW-xBD" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="k9z-Ux-wv1"/>
+                <constraint firstItem="Uox-AA-AcS" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="krM-uH-V2x"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Uox-AA-AcS" secondAttribute="trailing" id="qbv-pl-2TV"/>
+            </constraints>
+            <point key="canvasLocation" x="132" y="80"/>
+        </view>
+    </objects>
+</document>

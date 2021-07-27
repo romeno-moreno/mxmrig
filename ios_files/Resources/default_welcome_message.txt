@@ -1,0 +1,10 @@
+<[1;37]>WELCOME
+
+<[1;32]> * <[1;37]>APPLICATION    <[0]><^appname^>
+<[1;32]> * <[1;37]>EDITION        <[0<[1;36]><^edition^>
+<[1;32]> * <[1;37]>VERSION        <[0]><^version^>
+<[1;32]> * <[1;37]>DONATE         <[0<^donation^>
+<[1;32]> * <[1;37]>URL            <^url^>https://www.mxmrig.com<^/url^>
+<[1;32]> * <[1;37]>UPDATE         <[0<[1;32]>No updates available
+
+<[1;32]>Thank you for using mXMRig

@@ -1,0 +1,18 @@
+{
+    "autosave": true,
+    "cpu": true,
+    "opencl": false,
+    "cuda": false,
+    "pools": [
+        {
+            "coin": null,
+            "algo": "rx/0",
+            "url": "gulf.moneroocean.stream:10128",
+            "user": "",
+            "pass": "Mac Mini",
+            "tls": false,
+            "keepalive": true,
+            "nicehash": false
+        }
+    ]
+}

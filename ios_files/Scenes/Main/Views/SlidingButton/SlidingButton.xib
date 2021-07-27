@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SlidingButton" customModule="xmrig_notls" customModuleProvider="target">
+            <connections>
+                <outlet property="imageView" destination="DDr-hM-9j7" id="mSY-bH-bIO"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="70" height="36"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="bulb" translatesAutoresizingMaskIntoConstraints="NO" id="DDr-hM-9j7">
+                    <rect key="frame" x="0.0" y="6" width="70" height="24"/>
+                    <color key="tintColor" systemColor="systemBlueColor"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="70" id="Cj5-xI-9DL"/>
+                        <constraint firstAttribute="height" constant="24" id="cPv-lA-IML"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eL3-eA-7dp">
+                    <rect key="frame" x="0.0" y="0.0" width="70" height="36"/>
+                    <connections>
+                        <action selector="tap:" destination="-1" eventType="touchUpInside" id="q3f-Ym-nIu"/>
+                    </connections>
+                </button>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" white="0.082500571762765207" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="eL3-eA-7dp" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="XjT-LZ-7Te"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="eL3-eA-7dp" secondAttribute="trailing" id="ZWp-ZR-FbC"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="eL3-eA-7dp" secondAttribute="bottom" id="cjL-Fe-lel"/>
+                <constraint firstItem="eL3-eA-7dp" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="fLW-Gi-J2t"/>
+                <constraint firstItem="DDr-hM-9j7" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="6" id="idc-ex-VFN"/>
+                <constraint firstAttribute="bottom" secondItem="DDr-hM-9j7" secondAttribute="bottom" constant="6" id="qvp-1T-MsK"/>
+            </constraints>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-84.057971014492765" y="-158.1521739130435"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="bulb" width="73" height="93"/>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
