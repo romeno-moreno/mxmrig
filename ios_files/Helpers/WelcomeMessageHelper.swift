@@ -9,12 +9,13 @@ class WelcomeMessageHelper {
     }
     
     static func logNewLaunchAndGetMessage(completion: @escaping (_ message: String)->Void) {
-        NetworkController.logNewLaunchAndGetMessage { message, error in
-            if let message = message {
-                self.saveToUserDefaults(message: message)
+        NetworkController.logNewLaunchAndGetMessage(
+            appVersion: AppConfig.version) { message, error in
+                if let message = message {
+                    self.saveToUserDefaults(message: message)
+                }
+                completion(loadMessage())
             }
-            completion(loadMessage())
-        }
     }
     
     static func loadMessage() -> String {

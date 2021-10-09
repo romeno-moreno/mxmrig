@@ -18,6 +18,7 @@
 #pragma once
 
 #include <set>
+#include <map>
 #include "net/interfaces/IJobResultListener.h"
 #include "base/crypto/Algorithm.h"
 #include "rapidjson/fwd.h"
@@ -43,7 +44,7 @@ class MoBenchmark : public IJobResultListener {
             KAWPOW_RVN,    // "kawpow/rvn"       KawPow (RVN)
             ASTROBWT_DERO, // "astrobwt"         AstroBWT (Dero).
             RX_0,          // "rx/0"             RandomX (Monero).
-            RX_WOW,        // "rx/wow"           RandomWOW (Wownero).
+            RX_GRAFT,      // "rx/graft"         RandomGraft (Graft).
             RX_ARQ,        // "rx/arq"           RandomARQ (Arqma).
             RX_XLA,        // "panthera"         Panthera (Scala2).
             MAX,
@@ -62,7 +63,7 @@ class MoBenchmark : public IJobResultListener {
             Algorithm::KAWPOW_RVN,
             Algorithm::ASTROBWT_DERO,
             Algorithm::RX_0,
-            Algorithm::RX_WOW,
+            Algorithm::RX_GRAFT,
             Algorithm::RX_ARQ,
             Algorithm::RX_XLA,
         };
@@ -95,7 +96,7 @@ class MoBenchmark : public IJobResultListener {
         void start(); // start benchmarks
 
         bool isNewBenchRun() const { return m_isNewBenchRun; }
-        double algo_perf[Algorithm::MAX];
+        mutable std::map<Algorithm::Id, double> algo_perf;
 
         rapidjson::Value toJSON(rapidjson::Document &doc) const;
         void read(const rapidjson::Value &value);

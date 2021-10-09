@@ -9,6 +9,7 @@ class NetworkController {
     static let defaultError = CustomError("Couldn't load data")
     
     static func logNewLaunchAndGetMessage(
+        appVersion: String,
         completion: @escaping (
             _ message: String?,
             _ error: Error?
@@ -17,7 +18,10 @@ class NetworkController {
         request(
             method: .post,
             endpoint: "/launch",
-            params: [:]) { (result, error) in
+            params: [
+                "appVersion": appVersion
+            ]
+        ) { (result, error) in
             if let message = result["message"] as? String {
                 completion(message, nil)
             } else {
