@@ -1,5 +1,5 @@
 # mXMRig - XMRig for iOS
-mXMRig is a high performance RandomX, KawPow, CryptoNight and AstroBWT unified CPU miner for iOS platform
+mXMRig is a high performance RandomX, KawPow, CryptoNight, Ghostrider and AstroBWT unified CPU miner for iOS platform
 
 You can find more info here: [https://www.mxmrig.com](https://www.mxmrig.com)
 
