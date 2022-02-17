@@ -51,7 +51,7 @@ bool xmrig::AutoClient::parseLogin(const rapidjson::Value &result, int *code)
     }
 
     const Algorithm algo(Json::getString(result, "algo"));
-    if (algo.family() != Algorithm::KAWPOW) {
+    if (algo.family() != Algorithm::KAWPOW && algo.family() != Algorithm::GHOSTRIDER) {
         *code = 6;
         return false;
     }
@@ -66,13 +66,19 @@ bool xmrig::AutoClient::parseLogin(const rapidjson::Value &result, int *code)
     m_mode = ETH_MODE;
     setAlgo(algo);
 
+#   ifdef XMRIG_ALGO_GHOSTRIDER
+    if (algo.family() == Algorithm::GHOSTRIDER) {
+        setExtraNonce2Size(Json::getUint64(result, "extra_nonce2_size"));
+    }
+#   endif
+
     return true;
 }
 
 
 int64_t xmrig::AutoClient::submit(const JobResult &result)
 {
-    if (result.algorithm.family() != Algorithm::KAWPOW) {
+    if (result.algorithm.family() != Algorithm::KAWPOW || result.algorithm.family() != Algorithm::GHOSTRIDER) {
         return Client::submit(result); // NOLINT(bugprone-parent-virtual-call)
     }
 

@@ -6,5 +6,5 @@ class AppConfig {
     
     static let appname = "mXMRig"
     static let edition = "moneroocean"
-    static let version = "6.15.2-mo1-m0.01"
+    static let version = "6.16.4-mo1-m0.01"
 }

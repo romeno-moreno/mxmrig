@@ -1,7 +1,7 @@
 #import "LoggerBridge.h"
 #import <AVFoundation/AVFoundation.h>
 #import "../ansi2html/ansi_esc2html.h"
-#import <xmrig-Swift.h>
+#import <xmrig_notls-Swift.h>
 
 @implementation LoggerBridge
 

@@ -68,6 +68,7 @@ static const option options[] = {
 #   ifdef XMRIG_FEATURE_MO_BENCHMARK
     { "rebench-algo",          0, nullptr, IConfig::RebenchAlgoKey        },
     { "bench-algo-time",       1, nullptr, IConfig::BenchAlgoTimeKey      },
+    { "algo-min-time",         1, nullptr, IConfig::AlgoMinTimeKey        },
 #   endif
     { "no-color",              0, nullptr, IConfig::ColorKey              },
     { "no-huge-pages",         0, nullptr, IConfig::HugePagesKey          },
@@ -75,6 +76,7 @@ static const option options[] = {
     { "hugepage-size",         1, nullptr, IConfig::HugePageSizeKey       },
     { "huge-pages-jit",        0, nullptr, IConfig::HugePagesJitKey       },
     { "hugepages-jit",         0, nullptr, IConfig::HugePagesJitKey       },
+    { "rotation",              1, nullptr, IConfig::RotationKey           },
     { "pass",                  1, nullptr, IConfig::PasswordKey           },
     { "print-time",            1, nullptr, IConfig::PrintTimeKey          },
     { "retries",               1, nullptr, IConfig::RetriesKey            },

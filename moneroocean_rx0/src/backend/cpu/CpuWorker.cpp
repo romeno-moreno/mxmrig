@@ -23,6 +23,7 @@
 
 #include "backend/cpu/Cpu.h"
 #include "backend/cpu/CpuWorker.h"
+#include "base/tools/Alignment.h"
 #include "base/tools/Chrono.h"
 #include "core/config/Config.h"
 #include "core/Miner.h"
@@ -34,6 +35,7 @@
 #include "crypto/rx/Rx.h"
 #include "crypto/rx/RxDataset.h"
 #include "crypto/rx/RxVm.h"
+#include "crypto/ghostrider/ghostrider.h"
 #include "net/JobResults.h"
 
 
@@ -82,7 +84,8 @@ xmrig::CpuWorker<N>::CpuWorker(size_t id, const CpuLaunchData &data) :
 {
 #   ifdef XMRIG_ALGO_CN_HEAVY
     // cn-heavy optimization for Zen3 CPUs
-    if ((N == 1) && (m_av == CnHash::AV_SINGLE) && (m_algorithm.family() == Algorithm::CN_HEAVY) && (m_assembly != Assembly::NONE) && (Cpu::info()->arch() == ICpuInfo::ARCH_ZEN3)) {
+    const bool is_vermeer = (Cpu::info()->arch() == ICpuInfo::ARCH_ZEN3) && (Cpu::info()->model() == 0x21);
+    if ((N == 1) && (m_av == CnHash::AV_SINGLE) && (m_algorithm.family() == Algorithm::CN_HEAVY) && (m_assembly != Assembly::NONE) && is_vermeer) {
         std::lock_guard<std::mutex> lock(cn_heavyZen3MemoryMutex);
         if (!cn_heavyZen3Memory) {
             // Round up number of threads to the multiple of 8
@@ -96,6 +99,10 @@ xmrig::CpuWorker<N>::CpuWorker(size_t id, const CpuLaunchData &data) :
     {
         m_memory = new VirtualMemory(m_algorithm.l3() * N, data.hugePages, false, true, node());
     }
+
+#   ifdef XMRIG_ALGO_GHOSTRIDER
+    m_ghHelper = ghostrider::create_helper_thread(affinity(), data.priority, data.affinities);
+#   endif
 }
 
 
@@ -114,6 +121,10 @@ xmrig::CpuWorker<N>::~CpuWorker()
     {
         delete m_memory;
     }
+
+#   ifdef XMRIG_ALGO_GHOSTRIDER
+    ghostrider::destroy_helper_thread(m_ghHelper);
+#   endif
 }
 
 
@@ -124,7 +135,7 @@ void xmrig::CpuWorker<N>::allocateRandomX_VM()
     RxDataset *dataset = Rx::dataset(m_job.currentJob(), node());
 
     while (dataset == nullptr) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
 
         if (Nonce::sequence(Nonce::CPU) == 0) {
             return;
@@ -153,6 +164,12 @@ bool xmrig::CpuWorker<N>::selfTest()
 
     allocateCnCtx();
 
+#   ifdef XMRIG_ALGO_GHOSTRIDER
+    if (m_algorithm.family() == Algorithm::GHOSTRIDER) {
+        return (N == 8) && verify(Algorithm::GHOSTRIDER_RTM, test_output_gr);
+    }
+#   endif
+
     if (m_algorithm.family() == Algorithm::CN) {
         const bool rc = verify(Algorithm::CN_0,      test_output_v0)   &&
                         verify(Algorithm::CN_1,      test_output_v1)   &&
@@ -165,20 +182,19 @@ bool xmrig::CpuWorker<N>::selfTest()
                         verify(Algorithm::CN_RWZ,    test_output_rwz)  &&
                         verify(Algorithm::CN_ZLS,    test_output_zls)  &&
                         verify(Algorithm::CN_CCX,    test_output_ccx)  &&
+                        verify(Algorithm::CN_DOUBLE, test_output_double)
 #                       ifdef XMRIG_ALGO_CN_GPU
-                        verify(Algorithm::CN_GPU,    test_output_gpu)  &&
+                        &&
+                        verify(Algorithm::CN_GPU,    test_output_gpu)
 #                       endif
-                        verify(Algorithm::CN_DOUBLE, test_output_double);
+                        ;
 
 #       ifdef XMRIG_ALGO_CN_GPU
-        if (!rc || N > 1) {
-            return rc;
-        }
-
-        return verify(Algorithm::CN_GPU, test_output_gpu);
-#       else
-        return rc;
+        if (! (!rc || N > 1)) {
+            return verify(Algorithm::CN_GPU, test_output_gpu);
+        } else
 #       endif
+        return rc;
     }
 
 #   ifdef XMRIG_ALGO_CN_LITE
@@ -241,7 +257,7 @@ void xmrig::CpuWorker<N>::start()
     while (Nonce::sequence(Nonce::CPU) > 0) {
         if (Nonce::isPaused()) {
             do {
-                std::this_thread::sleep_for(std::chrono::milliseconds(200));
+                std::this_thread::sleep_for(std::chrono::milliseconds(20));
             }
             while (Nonce::isPaused() && Nonce::sequence(Nonce::CPU) > 0);
 
@@ -266,7 +282,7 @@ void xmrig::CpuWorker<N>::start()
 
             uint32_t current_job_nonces[N];
             for (size_t i = 0; i < N; ++i) {
-                current_job_nonces[i] = *m_job.nonce(i);
+                current_job_nonces[i] = readUnaligned(m_job.nonce(i));
             }
 
 #           ifdef XMRIG_FEATURE_BENCHMARK
@@ -311,16 +327,30 @@ void xmrig::CpuWorker<N>::start()
             else
 #           endif
             {
+                switch (job.algorithm().family()) {
+
 #               ifdef XMRIG_ALGO_ASTROBWT
-                if (job.algorithm().family() == Algorithm::ASTROBWT) {
+                case Algorithm::ASTROBWT:
                     if (!astrobwt::astrobwt_dero(m_job.blob(), job.size(), m_ctx[0]->memory, m_hash, m_astrobwtMaxSize, m_astrobwtAVX2)) {
                         valid = false;
                     }
-                }
-                else
+                    break;
 #               endif
-                {
+
+#               ifdef XMRIG_ALGO_GHOSTRIDER
+                case Algorithm::GHOSTRIDER:
+                    if (N == 8) {
+                        ghostrider::hash_octa(m_job.blob(), job.size(), m_hash, m_ctx, m_ghHelper);
+                    }
+                    else {
+                        valid = false;
+                    }
+                    break;
+#               endif
+
+                default:
                     fn(job.algorithm())(m_job.blob(), job.size(), m_hash, m_ctx, job.height());
+                    break;
                 }
 
                 if (!nextRound()) {
@@ -379,6 +409,37 @@ bool xmrig::CpuWorker<N>::nextRound()
 template<size_t N>
 bool xmrig::CpuWorker<N>::verify(const Algorithm &algorithm, const uint8_t *referenceValue)
 {
+#   ifdef XMRIG_ALGO_GHOSTRIDER
+    if (algorithm == Algorithm::GHOSTRIDER_RTM) {
+        uint8_t blob[N * 80] = {};
+        for (size_t i = 0; i < N; ++i) {
+            blob[i * 80 + 0] = static_cast<uint8_t>(i);
+            blob[i * 80 + 4] = 0x10;
+            blob[i * 80 + 5] = 0x02;
+        }
+
+        uint8_t hash1[N * 32] = {};
+        ghostrider::hash_octa(blob, 80, hash1, m_ctx, 0, false);
+
+        for (size_t i = 0; i < N; ++i) {
+            blob[i * 80 + 0] = static_cast<uint8_t>(i);
+            blob[i * 80 + 4] = 0x43;
+            blob[i * 80 + 5] = 0x05;
+        }
+
+        uint8_t hash2[N * 32] = {};
+        ghostrider::hash_octa(blob, 80, hash2, m_ctx, 0, false);
+
+        for (size_t i = 0; i < N * 32; ++i) {
+            if ((hash1[i] ^ hash2[i]) != referenceValue[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+#   endif
+
     cn_hash_fun func = fn(algorithm);
     if (!func) {
         return false;
@@ -495,6 +556,7 @@ template class CpuWorker<2>;
 template class CpuWorker<3>;
 template class CpuWorker<4>;
 template class CpuWorker<5>;
+template class CpuWorker<8>;
 
 } // namespace xmrig
 

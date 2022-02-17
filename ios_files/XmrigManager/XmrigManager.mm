@@ -1,7 +1,7 @@
 #import "XmrigManager.h"
 #import <AVFoundation/AVFoundation.h>
 #import "Logger/LoggerBridge.h"
-#import <xmrig-Swift.h>
+#import <xmrig_notls-Swift.h>
 
 #include "App.h"
 #include "base/kernel/Entry.h"

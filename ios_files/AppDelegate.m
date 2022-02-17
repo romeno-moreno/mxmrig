@@ -3,7 +3,7 @@
 #import <Foundation/Foundation.h>
 #import "LoggerBridge.h"
 #import <AVFoundation/AVFoundation.h>
-#import <xmrig-Swift.h>
+#import <xmrig_notls-Swift.h>
 
 @implementation AppDelegate
 

@@ -87,6 +87,7 @@ public:
         SpendSecretKey       = 1055,
         DaemonZMQPortKey     = 1056,
         HugePagesJitKey      = 1057,
+        RotationKey          = 1058,
 
         // xmrig common
         CPUPriorityKey       = 1021,
@@ -96,6 +97,7 @@ public:
 #       ifdef XMRIG_FEATURE_MO_BENCHMARK
         RebenchAlgoKey       = 10001,
         BenchAlgoTimeKey     = 10002,
+        AlgoMinTimeKey       = 10003,
 #       endif
 
         // xmrig cpu

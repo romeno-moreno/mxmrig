@@ -48,15 +48,15 @@ size_t inline generate<Algorithm::CN>(Threads<CpuThreads> &threads, uint32_t lim
     size_t count = 0;
 
     count += generate(Algorithm::kCN, threads, Algorithm::CN_1, limit);
+    count += generate(Algorithm::kCN_2, threads, Algorithm::CN_2, limit);
+#   ifdef XMRIG_ALGO_CN_GPU
+    count += generate(Algorithm::kCN_GPU, threads, Algorithm::CN_GPU, limit);
+#   endif
 
     if (!threads.isExist(Algorithm::CN_0)) {
         threads.disable(Algorithm::CN_0);
         ++count;
     }
-
-#   ifdef XMRIG_ALGO_CN_GPU
-    count += generate(Algorithm::kCN_GPU, threads, Algorithm::CN_GPU, limit);
-#   endif
 
     return count;
 }
@@ -168,6 +168,15 @@ size_t inline generate<Algorithm::ASTROBWT>(Threads<CpuThreads>& threads, uint32
     return generate(Algorithm::kASTROBWT, threads, Algorithm::ASTROBWT_DERO, limit);
 }
 #endif
+
+#ifdef XMRIG_ALGO_GHOSTRIDER
+template<>
+size_t inline generate<Algorithm::GHOSTRIDER>(Threads<CpuThreads>& threads, uint32_t limit)
+{
+    return generate(Algorithm::kGHOSTRIDER, threads, Algorithm::GHOSTRIDER_RTM, limit);
+}
+#endif
+
 
 } /* namespace xmrig */
 
