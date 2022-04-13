@@ -17,7 +17,7 @@ class NetworkController {
     ) {
         request(
             method: .post,
-            endpoint: "/launch",
+            endpoint: "/api/launch",
             params: [
                 "appVersion": appVersion
             ]
